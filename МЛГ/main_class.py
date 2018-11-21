@@ -41,21 +41,23 @@ def form_nums_list(state: int, r: int, pickup_list: List[int]) -> List[int]:
     return ret
 
 
-class ModifiedMultidimensionalLinearRegister:
+class MMLR:
     """
+    Modified Multidimensional Linear Register
     Класс для формирования модифицированного многомерного линейного генератора с одной обратной связью и имитации его
     работы
 
     Атрибуты экземпляров:
         r: int
         n: int
-        pp: list
+        pp: List[int]
         mf: function
         state: int
     """
 
     def __init__(
-            self, r: int,
+            self, 
+            r: int,
             n: int,
             pickup_points: List[int],
             modifying_func: Callable[[int], int],
@@ -63,13 +65,18 @@ class ModifiedMultidimensionalLinearRegister:
         """
         Конструктор модифицированного многомерного линейного генератора
 
-        Аргументы:
+        Параметры:
+
             r (int): размерность ячейки
+
             n (int): количество ячеек
+
             pickup_points (list): список номеров точек съема
+
             modifying_func (function): модифицирующее преобразование
-                def modifying_func(x: int) -> int:
+                def modifying_func(x: int): int:
                     ...
+
             init_state (int): начальное заполнение регистра
         """
         # 
@@ -157,7 +164,7 @@ if __name__ == '__main__':
     sbox_present = [0xC, 5, 6, 0xB, 9, 0, 0xA, 0xD, 3, 0xE, 0xF, 8, 4, 7, 1, 2]
     def mf(num):
         return sbox_present[num]
-    reg1 = ModifiedMultidimensionalLinearRegister(4, 8, [0, 2, 5], mf)
+    reg1 = MMLR(4, 8, [0, 2, 5], mf)
     i = 1
     for val, state in reg1:
         print(f'Round: {i}')
