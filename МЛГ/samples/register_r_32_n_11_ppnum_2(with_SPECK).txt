@@ -1,0 +1,1 @@
+Register: r=32, n=11, pickup_points=[0, 10], power=23

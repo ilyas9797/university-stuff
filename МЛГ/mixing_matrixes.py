@@ -119,3 +119,14 @@ def construct_mixing_matrix_SPECK(size: int):
     mix_matr[half_size: size, half_size: size] = tmp_matr
 
     return mix_matr
+
+
+def construct_mixing_matrix_upper_triangular(size: int) -> np.ndarray:
+    
+    mix_matr = np.zeros((size, size), dtype=np.int)
+    for x in range(size):
+        for y in range(x, size):
+            mix_matr[x, y] = 1
+    return mix_matr
+
+
