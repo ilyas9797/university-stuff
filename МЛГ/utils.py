@@ -29,3 +29,4 @@ def comb(n, k):
             d[j] = d[j - 1] + 1
 
         yield list(map(lambda x: x+1, d))
+
