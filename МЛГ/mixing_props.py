@@ -1,12 +1,12 @@
 """В модуле реализованы функции для оценки перемешивающих свойств преобразований по их перемешивающим матрицам"""
 
-import operator
+
 
 import numpy as np
 
 import mixing_matrixes
 import MMLR
-from utils import cast_matrix_to_identity_format, comb
+from utils import cast_matrix_to_identity_format
 
 
 def pow_matrix_gen(matr: np.ndarray):
@@ -35,7 +35,7 @@ def get_exponent(mix_matr: np.ndarray, max_rounds: int) -> int:
     """Возвращает значение экспоненты, если число раундов превзошло max_rounds, вернет -1"""
     i = 1
     for m in pow_matrix_gen(mix_matr):
-        print(m)
+        # print(m)
         if check_full_mixing(m):
             return i
         i += 1
@@ -44,31 +44,32 @@ def get_exponent(mix_matr: np.ndarray, max_rounds: int) -> int:
     return -1
 
 
-if __name__ == '__main__':
-    np.set_printoptions(threshold=np.nan, linewidth=np.nan)
-    r = 32
-    n = 8
-    mf = None
-    for ppnum in range(n-1, n):
-        results = list()
-        for pp in comb(n - 1, ppnum):
-            pickup_points = [0] + pp
-            # reg1 = MMLR.MMLR(r, n, pickup_points, mf)
-            # mix_matr = mixing_matrixes.construct_mixing_matrix_MMLR(r, n, pickup_points, mixing_matrixes.construct_mixing_matrix_SPECK(r))
-            mix_matr = mixing_matrixes.construct_mixing_matrix_MMLR(r, n, pickup_points, mixing_matrixes.construct_mixing_matrix_upper_triangular(r))
-            power = 1
-            for m in pow_matrix_gen(mix_matr):
-                if check_full_mixing(m):
-                    results.append((f"{pickup_points}, ", power))
-                    break
-                power += 1
-                if power > 100:
-                    with open('MMLR_0_3_5_upper_triangular_matrix_32_power_101.txt','w') as file:
-                        file.write(str(m))
-                    break
-        results = list(sorted(results, key=operator.itemgetter(0)))
-        with open(f"samples/register_r_{r}_n_{n}_ppnum_{ppnum+1}(with_upper_triangular_matrix).txt", 'w') as file:
-            file.write('\n'.join(f"{r[0]}{r[1]}" for r in results))
+
+# if __name__ == '__main__':
+#     np.set_printoptions(threshold=np.nan, linewidth=np.nan)
+#     r = 32
+#     n = 8
+#     mf = None
+#     for ppnum in range(n-1, n):
+#         results = list()
+#         for pp in comb(n - 1, ppnum):
+#             pickup_points = [0] + pp
+#             # reg1 = MMLR.MMLR(r, n, pickup_points, mf)
+#             # mix_matr = mixing_matrixes.construct_mixing_matrix_MMLR(r, n, pickup_points, mixing_matrixes.construct_mixing_matrix_SPECK(r))
+#             mix_matr = mixing_matrixes.construct_mixing_matrix_MMLR(r, n, pickup_points, mixing_matrixes.construct_mixing_matrix_upper_triangular(r))
+#             power = 1
+#             for m in pow_matrix_gen(mix_matr):
+#                 if check_full_mixing(m):
+#                     results.append((f"{pickup_points}, ", power))
+#                     break
+#                 power += 1
+#                 if power > 100:
+#                     with open('MMLR_0_3_5_upper_triangular_matrix_32_power_101.txt','w') as file:
+#                         file.write(str(m))
+#                     break
+#         results = list(sorted(results, key=operator.itemgetter(0)))
+#         with open(f"samples/register_r_{r}_n_{n}_ppnum_{ppnum+1}(with_upper_triangular_matrix).txt", 'w') as file:
+#             file.write('\n'.join(f"{r[0]}{r[1]}" for r in results))
 
   
     # np.set_printoptions(threshold=np.nan, linewidth=np.nan)

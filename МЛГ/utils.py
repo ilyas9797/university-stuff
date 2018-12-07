@@ -1,4 +1,6 @@
 import numpy as np
+from typing import List, Tuple
+import os
 
 def cast_matrix_to_identity_format(matr: np.ndarray):
     """Заменяет все элементы матрицы большие нуля на 1
@@ -30,3 +32,16 @@ def comb(n, k):
 
         yield list(map(lambda x: x+1, d))
 
+
+def write_matrix(file_name: str, matr: np.ndarray) -> None:
+    np.set_printoptions(threshold=np.nan, linewidth=np.nan)
+    os.makedirs(os.path.dirname(file_name), exist_ok=True)
+    with open(file_name,'w') as file:
+        file.write(str(matr))
+
+def write_exponents(file_name: str, results: List[Tuple[int, List[int], int]]) -> None:
+    """results: [(ppnum, pp, power)]"""
+    np.set_printoptions(threshold=np.nan, linewidth=np.nan)
+    os.makedirs(os.path.dirname(file_name), exist_ok=True)
+    with open(file_name, 'w') as file:
+        file.write('\n'.join(f"{r[1]} {r[2]}" for r in results))
