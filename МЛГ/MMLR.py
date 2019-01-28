@@ -60,7 +60,7 @@ class MMLR:
             r: int,
             n: int,
             pickup_points: List[int],
-            modifying_func: Callable[[int], int],
+            modifying_func: Callable[[int,int], int],
             init_state: int=0):
         """
         Конструктор модифицированного многомерного линейного генератора
@@ -74,7 +74,7 @@ class MMLR:
             pickup_points (list): список номеров точек съема
 
             modifying_func (function): модифицирующее преобразование
-                def modifying_func(x: int): int:
+                def modifying_func(x: int, key: int): int:
                     ...
 
             init_state (int): начальное заполнение регистра
@@ -136,7 +136,11 @@ class MMLR:
         # сдвиг регистра и запись нового значения
         self.do_shift(modified_val)
 
-    def get_current_val(self) -> int:
+    def get_current_state_val(self) -> int:
+        """Возвращает значение, соответсвующее текущему состояния генератора"""
+        return self.state
+    
+    def get_current_output_val(self) -> int:
         """Возвращает значение ячейки с наименьшим порядковым номером"""
         return form_nums_list(self.state, self.r, [0])[0]
 
@@ -150,7 +154,8 @@ class MMLR:
 
     def __next__(self):
         self.do_cycle()
-        return self.get_current_val(), self.get_current_state()
+        return self.get_current_state_val()
+        # return self.get_current_output_val()
 
 
 def binary_format_state(val_list: List[int], align: int, bigEndian=False) -> List[str]:

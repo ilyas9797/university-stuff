@@ -1,9 +1,17 @@
-"""В модуле реализованы функции строящие перемешивающие матрицы для различных типов преобразований"""
+"""В модуле реализованы функции строящие перемешивающие матрицы для различных типов преобразований
+Нумерация координат в матрицах следующая:
+(0,0)    . . .   (0,n-1)
+
+  .     .           .
+  .        .        .
+  .           .     .
+
+(n-1,0)  . . .   (n-1,n-1)
+"""
 
 import numpy as np
 from typing import List
 
-import MMLR
 from utils import cast_matrix_to_identity_format
 
 
@@ -57,7 +65,7 @@ def construct_mixing_matrix_MMLR(r: int, n: int, pp: List[int], mf_mix_matr: np.
 
 def construct_mixing_matrix_mf_Sbox(r: int):
     """Составляет матрицу заполненую единицами.
-    Именно так выглядит матрица для номального Sbox
+    Именно так выглядит матрица для 'нормального' S-box
     """
     return np.fromfunction(lambda i, j: 1, (r, r), dtype=int)
 
@@ -65,18 +73,10 @@ def construct_mixing_matrix_mf_Sbox(r: int):
 def construct_mixing_matrix_SPECK(size: int):
     """Строит перемешивающую матрицу для SPECK
     
-    mode (int): задает размер блока SPECK в битах. Возможные значения соответсвуют ключам словаря:
-
-        {
-            1: 32,
-            2: 48,
-            3: 64,
-            4: 96,
-            5: 128
-        }
+    size (int): задает размер блока SPECK в битах. Возможные значения соответсвуют ключам словаря:
     """
     if size not in [32, 48, 64, 96, 128]: 
-        raise Exception
+        raise Exception("Ошибка: выбран неверный размер блока SPECK")
     half_size = size // 2
 
     shift1 = 8

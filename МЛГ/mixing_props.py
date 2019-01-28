@@ -1,7 +1,6 @@
 """В модуле реализованы функции для оценки перемешивающих свойств преобразований по их перемешивающим матрицам"""
 
 
-
 import numpy as np
 
 import mixing_matrixes
@@ -25,14 +24,14 @@ def check_full_mixing(matr: np.ndarray) -> bool:
     size = matr.shape[0]
     for i in range(size):
         for j in range(size):
-            if matr[i, j] == 0: 
+            if matr[i, j] == 0:
                 return False
     else:
         return True
 
 
 def get_exponent(mix_matr: np.ndarray, max_rounds: int) -> int:
-    """Возвращает значение экспоненты, если число раундов превзошло max_rounds, вернет -1"""
+    """Возвращает значение экспоненты для перемешивающей матрицы mix_matr, если число раундов превзошло max_rounds, вернет -1"""
     i = 1
     for m in pow_matrix_gen(mix_matr):
         # print(m)
@@ -42,7 +41,6 @@ def get_exponent(mix_matr: np.ndarray, max_rounds: int) -> int:
         if i > max_rounds:
             break
     return -1
-
 
 
 # if __name__ == '__main__':
@@ -71,7 +69,6 @@ def get_exponent(mix_matr: np.ndarray, max_rounds: int) -> int:
 #         with open(f"samples/register_r_{r}_n_{n}_ppnum_{ppnum+1}(with_upper_triangular_matrix).txt", 'w') as file:
 #             file.write('\n'.join(f"{r[0]}{r[1]}" for r in results))
 
-  
     # np.set_printoptions(threshold=np.nan, linewidth=np.nan)
     # with open('MMLR_0_3_5_upper_triangular_matrix_32_power_3.txt','w') as file:
     #     # m = mixing_matrixes.construct_mixing_matrix_upper_triangular(32)
