@@ -1,1 +1,0 @@
-def nash64(x:int, k:)
