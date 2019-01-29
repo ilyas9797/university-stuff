@@ -93,7 +93,7 @@ def research_perfection_props_MMLR_SPECK(
         results = list(sorted(results, key=operator.itemgetter(2)))
 
         write_perf_index(
-            f"./perf_index/MMLR_SPECK/r_{r}_n_{n}_ppnum_{ppnum + 1}.txt",
+            f"./perf_index/MMLR_SPECK_samples_num_{samples_num}/r_{r}_n_{n}_ppnum_{ppnum + 1}.txt",
             results
         )
 
@@ -110,6 +110,6 @@ if __name__ == '__main__':
         n=8,
         ppnum_min=2,
         ppnum_max=8,
-        samples_num=20,
+        samples_num=100,
         max_rounds=25
     )
