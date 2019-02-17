@@ -11,7 +11,7 @@ def cast_matrix_to_identity_format(matr: np.ndarray):
     size = matr.shape[0]
     for i in range(size):
         for j in range(size):
-            if matr[i, j] > 0: 
+            if matr[i, j] > 0:
                 matr[i, j] = 1
 
 def comb(n, k):
@@ -71,3 +71,7 @@ def write_perf_index(file_name: str, results: List[Tuple[int, List[int], int]]) 
     with open(file_name, 'w') as file:
         file.write("<Pickup points> --- <Index of perfection>\n")
         file.write('\n'.join(f"{r[1]} --- {r[2]}" for r in results))
+
+
+
+

@@ -5,7 +5,7 @@ import numpy as np
 
 import mixing_matrixes
 import MMLR
-from utils import cast_matrix_to_identity_format
+from utils import cast_matrix_to_identity_format, write_matrix
 
 
 def pow_matrix_gen(matr: np.ndarray):
@@ -35,7 +35,32 @@ def get_exponent(mix_matr: np.ndarray, max_rounds: int) -> int:
     i = 1
     for m in pow_matrix_gen(mix_matr):
         # print(m)
+        # write_matrix(f'./m_{i}.txt',m)
         if check_full_mixing(m):
+            return i
+        i += 1
+        if i > max_rounds:
+            break
+    return -1
+
+def check_local_full_mixing(matr: np.ndarray, local_start: int, local_end: int) -> bool:
+    """Проверка того, что полное перемешивание достигнуто"""
+    size = matr.shape[0]
+    for i in range(size):
+        for j in range(local_start, local_end):
+            if matr[i, j] == 0:
+                return False
+    else:
+        return True
+
+
+def get_local_exponent(mix_matr: np.ndarray, max_rounds: int, local_start: int, local_end: int) -> int:
+    """Возвращает значение экспоненты для перемешивающей матрицы mix_matr, если число раундов превзошло max_rounds, вернет -1"""
+    i = 1
+    for m in pow_matrix_gen(mix_matr):
+        # print(m)
+        # write_matrix(f'./m_{i}.txt',m)
+        if check_local_full_mixing(m, local_start, local_end):
             return i
         i += 1
         if i > max_rounds:
