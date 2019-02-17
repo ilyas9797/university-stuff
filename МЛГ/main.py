@@ -168,3 +168,11 @@ if __name__ == '__main__':
         samples_num=100,
         max_rounds=25
     )
+    research_mixing_props_MMLR_SPECK(
+        r=32,
+        n=8,
+        ppnum_min=2,
+        ppnum_max=8,
+        max_rounds=25,
+        pow=2
+    )
