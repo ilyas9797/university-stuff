@@ -1,2 +1,2 @@
 <Pickup points> --- <Exponent>
-[0, 7] --- 16
+[0, 7] --- 17

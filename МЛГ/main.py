@@ -9,6 +9,8 @@ from perfection_props import get_MMLR_perfection_power
 from utils import comb, write_exponents, write_matrix, write_perf_index, progress_info
 
 
+from multiprocessing import Process
+
 
 def research_mixing_props_MMLR_SPECK(r: int, n: int, ppnum_min: int, ppnum_max: int, max_rounds: int, pow: int):
     """
@@ -149,7 +151,8 @@ def research_perfection_props_MMLR_SPECK(
 
 
 if __name__ == '__main__':
-    research_mixing_props_MMLR_SPECK(
+
+    p1_args_set = dict(
         r=32,
         n=8,
         ppnum_min=2,
@@ -157,7 +160,9 @@ if __name__ == '__main__':
         max_rounds=25,
         pow=1
     )
-    research_local_mixing_props_MMLR_SPECK(
+    p1 = Process(target=research_mixing_props_MMLR_SPECK, kwargs=p1_args_set)
+
+    p2_args_set = dict(
         r=32,
         n=8,
         ppnum_min=2,
@@ -165,7 +170,9 @@ if __name__ == '__main__':
         max_rounds=25,
         cell=0
     )
-    research_perfection_props_MMLR_SPECK(
+    p2 = Process(target=research_local_mixing_props_MMLR_SPECK, kwargs=p2_args_set)
+
+    p3_args_set = dict(
         r=32,
         n=8,
         ppnum_min=2,
@@ -173,7 +180,9 @@ if __name__ == '__main__':
         samples_num=100,
         max_rounds=25
     )
-    research_mixing_props_MMLR_SPECK(
+    p3 = Process(target=research_perfection_props_MMLR_SPECK, kwargs=p3_args_set)
+
+    p4_args_set = dict(
         r=32,
         n=8,
         ppnum_min=2,
@@ -181,3 +190,47 @@ if __name__ == '__main__':
         max_rounds=25,
         pow=2
     )
+    p4 = Process(target=research_mixing_props_MMLR_SPECK, kwargs=p4_args_set)
+
+    p1.start()
+    p2.start()
+    p3.start()
+    p4.start()
+
+    p1.join()
+    p2.join()
+    p3.join()
+    p4.join()
+
+    # research_mixing_props_MMLR_SPECK(
+    #     r=32,
+    #     n=8,
+    #     ppnum_min=2,
+    #     ppnum_max=8,
+    #     max_rounds=25,
+    #     pow=1
+    # )
+    # research_local_mixing_props_MMLR_SPECK(
+    #     r=32,
+    #     n=8,
+    #     ppnum_min=2,
+    #     ppnum_max=8,
+    #     max_rounds=25,
+    #     cell=0
+    # )
+    # research_perfection_props_MMLR_SPECK(
+    #     r=32,
+    #     n=8,
+    #     ppnum_min=2,
+    #     ppnum_max=8,
+    #     samples_num=100,
+    #     max_rounds=25
+    # )
+    # research_mixing_props_MMLR_SPECK(
+    #     r=32,
+    #     n=8,
+    #     ppnum_min=2,
+    #     ppnum_max=8,
+    #     max_rounds=25,
+    #     pow=2
+    # )
