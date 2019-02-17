@@ -145,7 +145,7 @@ def construct_mixing_matrix_SPECK(size: int):
     for i in range(half_size):
         right_alpha_shift[i, (-(i + 1) + alpha + half_size) % half_size] = 1
 
-    bottom_left = bottom_right = right_alpha_shift @ triangular
+    bottom_left = bottom_right = change_column_order(change_column_order(right_alpha_shift) @ change_column_order(triangular))
 
     res_matr = np.zeros((half_size*2, half_size*2), dtype=np.int)
 
