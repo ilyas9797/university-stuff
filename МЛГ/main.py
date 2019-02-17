@@ -6,7 +6,8 @@ from mixing_matrixes import (construct_mixing_matrix_MMLR,
                              construct_mixing_matrix_pow_SPECK)
 from mixing_props import get_exponent, get_local_exponent
 from perfection_props import get_MMLR_perfection_power
-from utils import comb, write_exponents, write_matrix, write_perf_index
+from utils import comb, write_exponents, write_matrix, write_perf_index, progress_info
+
 
 
 def research_mixing_props_MMLR_SPECK(r: int, n: int, ppnum_min: int, ppnum_max: int, max_rounds: int, pow: int):
@@ -67,6 +68,8 @@ def research_mixing_props_MMLR_SPECK(r: int, n: int, ppnum_min: int, ppnum_max: 
             results
         )
 
+        progress_info(f"ppnum={ppnum + 1} done")
+
 def research_local_mixing_props_MMLR_SPECK(r: int, n: int, ppnum_min: int, ppnum_max: int, max_rounds: int, cell: int):
     local_start = r * cell
     local_end = local_start + r
@@ -108,6 +111,7 @@ def research_local_mixing_props_MMLR_SPECK(r: int, n: int, ppnum_min: int, ppnum
             f"./local_exponents/MMLR_SPECK_cell_{cell}/r_{r}_n_{n}_ppnum_{ppnum + 1}.txt",
             results
         )
+        progress_info(f"ppnum={ppnum + 1} done")
 
 def research_perfection_props_MMLR_SPECK(
     n: int,
@@ -141,6 +145,7 @@ def research_perfection_props_MMLR_SPECK(
             f"./perf_index/MMLR_SPECK_samples_num_{samples_num}/r_{r}_n_{n}_ppnum_{ppnum + 1}.txt",
             results
         )
+        progress_info(f"ppnum={ppnum + 1} done")
 
 
 if __name__ == '__main__':

@@ -1,6 +1,7 @@
 import numpy as np
 from typing import List, Tuple
 import os
+from inspect import stack
 
 
 
@@ -72,6 +73,8 @@ def write_perf_index(file_name: str, results: List[Tuple[int, List[int], int]]) 
         file.write("<Pickup points> --- <Index of perfection>\n")
         file.write('\n'.join(f"{r[1]} --- {r[2]}" for r in results))
 
+def progress_info(message: str) -> None:
+    print(f"{stack()[1][3]}: {message}")
 
 
 
