@@ -63,3 +63,4 @@ def index_functionality():
 
                         if member[0].startswith(prefix):
                             imported_API_by_modules[imported_modules_by_packages[f'{pkg}'][f'{module}']].append(member)
+                            break

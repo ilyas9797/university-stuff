@@ -10,6 +10,7 @@ def main():
     Запуск экспериментов, выбранных пользователем.
     """
     utils.index_functionality()
+    print(utils.imported_API_by_modules)
     
     
 
