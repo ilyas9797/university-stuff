@@ -1,0 +1,5 @@
+{
+    "module_name": "Перемешивающие матрицы",
+    "API_modules": ["matrixes_generation"],
+    "API_functions": ["construct_matrix"]
+}

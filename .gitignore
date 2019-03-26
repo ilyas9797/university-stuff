@@ -5,3 +5,8 @@
 !*.vscode/extensions.json
 
 *__pycache__
+
+*old
+doc
+trash
+vendor
