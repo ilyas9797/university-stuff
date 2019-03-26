@@ -29,7 +29,7 @@ def index_functionality():
         # получение имен файлов для данного каталога модулей
         pkg_files = next(os.walk(f'{src}/{pkg}'))[2]
 
-        # каждый модуль должен содержать файл settings.json
+        # каждый пакет должен содержать файл settings.json
         if 'settings.json' not in pkg_files:
             raise Exception(f'Ошибка: пакет {pkg} не содержит файла настроек.')
 
