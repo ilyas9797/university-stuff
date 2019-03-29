@@ -3,10 +3,10 @@ from typing import List
 
 import numpy as np
 
-from src.mixing_matrixes.utils import cast_matrix_to_identity_format, change_column_order, write_matrix_pretty
+from src.mixing_matrixes.utils import cast_matrix_to_identity_format, change_column_order
 
 
-def construct_matrix_MMLR(r: int, n: int, pickup_points: List[int], mt_matrix: np.ndarray, filename: str=None) -> np.ndarray:
+def construct_matrix_MMLR(r: int, n: int, pickup_points: List[int], mt_matrix: np.ndarray) -> np.ndarray:
     """Строит перемешивающую матрицу модифицированного многомерного линейного генератора."""
 
     # проверка того, что размер ячейки генератора равен размеру матрицы модифицирующего преобразования
@@ -45,13 +45,10 @@ def construct_matrix_MMLR(r: int, n: int, pickup_points: List[int], mt_matrix: n
         pos_x = point * r
         matrix[pos_x: pos_x + r, pos_y: pos_y + r] = mt_matrix
 
-    if filename:
-        write_matrix_pretty(filename, matrix)
-
     return matrix
 
 
-def construct_matrix_SPECK(size: int, filename: str=None) -> np.ndarray:
+def construct_matrix_SPECK(size: int) -> np.ndarray:
     """Строит перемешивающую матрицу для пробразования однораундового SPECK.
 
     size (int): задает размер блока SPECK в битах. Возможные значения: [32, 48, 64, 96, 128]
@@ -94,13 +91,10 @@ def construct_matrix_SPECK(size: int, filename: str=None) -> np.ndarray:
     matrix_SPECK[half_size: size, 0: half_size] = bottom_left
     matrix_SPECK[half_size: size, half_size: size] = bottom_right
 
-    if filename:
-        write_matrix_pretty(filename, change_column_order(matrix_SPECK))
-
     return change_column_order(matrix_SPECK)
 
 
-def construct_mixing_matrix_pow_SPECK(pow: int, size: int, filename: str=None) -> np.ndarray:
+def construct_mixing_matrix_pow_SPECK(pow: int, size: int) -> np.ndarray:
     if pow < 1:
         raise Exception(
             'Ошибка: степень перемешивающей матрицы не должна быть меньше 1')
@@ -111,8 +105,5 @@ def construct_mixing_matrix_pow_SPECK(pow: int, size: int, filename: str=None) -
     for _ in range(pow - 1):
         matrix_SPECK_powed = matrix_SPECK_powed @ matrix_SPECK_one_round
         matrix_SPECK_powed = cast_matrix_to_identity_format(matrix_SPECK_powed)
-
-    if filename:
-        write_matrix_pretty(filename, matrix_SPECK_powed)
 
     return matrix_SPECK_powed

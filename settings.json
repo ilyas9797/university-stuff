@@ -1,5 +1,4 @@
 {
-    "version": "1",
-    "experiments_dir": "experiments",
-    "sources_dir": "src"
+    "experiments": "experiments",
+    "sources": "src"
 }
