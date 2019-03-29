@@ -3,6 +3,7 @@
 """
 import utils
 
+
 def main():
     """
     Перечисление реализованного функционала.
@@ -10,9 +11,9 @@ def main():
     Запуск экспериментов, выбранных пользователем.
     """
     utils.index_functionality()
-    
-    print(utils.imported_API_by_modules)
-    
+    utils.welcome()
+    console = utils.InteractiveCmd(utils.imported_API_by_pkg)
+    console.interactive()
     
 
 
