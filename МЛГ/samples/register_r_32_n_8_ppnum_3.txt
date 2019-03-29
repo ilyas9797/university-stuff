@@ -1,0 +1,2 @@
+Register: r=32, n=8, pickup_points=[0, 3, 7], power=11
+Register: r=32, n=8, pickup_points=[0, 4, 7], power=11

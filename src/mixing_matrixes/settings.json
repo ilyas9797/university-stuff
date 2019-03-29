@@ -1,5 +1,8 @@
 {
-    "module_name": "Перемешивающие матрицы",
-    "API_modules": ["matrixes_generation"],
-    "API_functions": ["construct_matrix"]
+    "pkg_name": "Перемешивающие матрицы",
+    "pkg_description": "",
+    "API": [
+        "MixingMatrixesCmdAPI"
+    ],
+    "experiments_dir": "mixing_matrixes"
 }
