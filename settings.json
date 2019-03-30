@@ -1,5 +1,5 @@
 {
     "version": "1",
-    "experiments_dir": "experiments",
+    "experiments_root_dir": "experiments",
     "sources_dir": "src"
 }
