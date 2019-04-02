@@ -32,7 +32,7 @@ imported_API_by_pkg: List[ImportedPkgAPI] = []
 
 # определяет допустимые типы сложных (итерируемых) аргументов для API-методов,
 # все остальные, подразумеваются, имеют базовые типы, например: int, str, ...
-possible_API_arg_types = Union[List[int], List[str]]
+Possible_API_arg_types = Union[List[int], List[str]]
 
 
 def reading_settings(file_path: str, props: List[str] = None) -> Dict[str, Any]:
@@ -88,8 +88,8 @@ def check_args_types_of_method(class_obj: type, method_name: str) -> bool:
             return False
         # проверка, что не базовый тип
         if type(param_type) != type:
-            # проверка, что не составной тип
-            if param_type not in possible_API_arg_types.__args__:
+            # проверка, что допустимый составной тип
+            if param_type not in Possible_API_arg_types.__args__:
                 return False
     return True
 
@@ -164,6 +164,47 @@ def index_functionality():
                     break
 
 
+def cast_api_method_arg_str_to_type(arg_in: str, arg_type: Any) -> Possible_API_arg_types:
+    """Приведение введенного пользователем аргумента API-функции к нужному типу."""
+    # TODO: проверка того, что это пройстой тип, напрмер, int, str,... В общем случае неправильная
+    if type(arg_type) == type:
+        return arg_type(arg_in)
+    # иначе сложный тип, а именно list
+    else:
+        complex_arg = map(lambda x: x.strip(), arg_in.split(','))
+        # TODO: учесть что в сложных типах может быть задано несколько подтипов
+        intype = arg_type.__args__[0]
+        arg_list = []
+        for arg_str in complex_arg:
+            arg_list.append(intype(arg_str))
+        origin = arg_type.__origin__
+        return origin(arg_list)
+
+
+def get_api_method_args(pkg_api: ImportedPkgAPI, class_api: APIClass, method_name: str) -> List[Any]:
+    """Считывает аргументы для вызова выбранного API-метода."""
+    sig = signature(getattr(class_api.class_obj(), method_name))
+    args = []
+    for param_name in sig.parameters:
+        param = cast(Parameter, sig.parameters[param_name])
+        param_type = param.annotation
+        arg_in = input(f"Введите {param.name}: ")
+        arg = cast_api_method_arg_str_to_type(arg_in, param_type)
+
+        # если аргумент называется filename,
+        # то приписваем путь для сохранения результатов эксперимента к названию файла
+        if param.name == 'filename':
+            arg = f"{root_settings['experiments_root_dir']}/{pkg_api.settings['experiments_dir']}/{arg}"
+        args.append(arg)
+    return args
+
+
+def welcome():
+    """Приветствие при работе в командной строке."""
+    version = root_settings['version']
+    print(f'Исследование криптографических свойств, v. {version}.')
+
+
 class InteractiveCmd:
     """Класс реализует интерактивное взаимодействие с пользователем через командную строку."""
 
@@ -180,12 +221,7 @@ class InteractiveCmd:
         # формирование подсказки с описанием доступного API, здесь же и обновляется self.options
         self.prompt = self.form_prompt()
 
-        self.welcome()
-
-    def welcome(self):
-        """Приветствие при работе в командной строке."""
-        version = root_settings['version']
-        print(f'Исследование криптографических свойств, v. {version}.')
+        welcome()
 
     def form_prompt(self) -> str:
         prompt: str = "Выберите желаемую операцию:\n\n"
@@ -216,7 +252,7 @@ class InteractiveCmd:
         self.options = i
         return prompt
 
-    def choose_api(self, op: int) -> Tuple[APIClass, int]:
+    def choose_api(self, op: int) -> Tuple[ImportedPkgAPI, APIClass, int]:
         """Установление соответствия между выбором пользователя и методом класса API."""
         #
         if op < 0 or op >= self.options:
@@ -227,52 +263,41 @@ class InteractiveCmd:
                 if (len(class_api.methods) - 1) > method_id:
                     method_id -= len(class_api.methods) - 1
                 else:
-                    return class_api, method_id
-
-    def cast_api_method_arg_str_to_type(self, arg_in: str, arg_type: Any) -> possible_API_arg_types:
-        """Приведение введенного пользователем аргумента API-функции к нужному типу."""
-        # TODO: проверка того, что это пройстой тип, напрмер, int, str,... Возможно неправильная
-        if type(arg_type) == type:
-            return arg_type(arg_in)
-        # иначе сложный тип, а именно list
-        else:
-            arg_str_list = map(lambda x: x.strip(), arg_in.split(','))
-            # TODO: учесть что в сложных типах может быть задано несколько подтипов
-            intype = arg_type.__args__[0]
-            arg_list = []
-            for arg_str in arg_str_list:
-                arg_list.append(intype(arg_str))
-            origin = arg_type.__origin__
-            return origin(arg_list)
-
-    def get_api_method_args(self, class_api: APIClass, method_name: str) -> List[Any]:
-        """Считывает аргументы для вызова выбранного API-метода."""
-        sig = signature(getattr(class_api.class_obj(), method_name))
-        args = []
-        for param_name in sig.parameters:
-            param = cast(Parameter, sig.parameters[param_name])
-            param_type = param.annotation
-            arg_in = input(f"Введите {param.name}: ")
-            arg = self.cast_api_method_arg_str_to_type(arg_in, param_type)
-            args.append(arg)
-        return args
+                    return pkg, class_api, method_id
 
     def interactive(self):
-
         while True:
+
+            # вывод подсказки
             print(self.prompt)
 
+            # выбор операции
             try:
                 op = input(f"Введите номер [0-{self.options - 1}]: ")
                 op = int(op)
-            except Exception:
+            except ValueError:
                 print(f"Ошибка: выбрана некорректная опция.\nПопробуйте еще раз.")
                 continue
-
+            except Exception as e:
+                print(f"Ошибка: {e}")
+                continue
             print()
 
+            # считываение параметров метода
             try:
-                class_api, method_id = self.choose_api(op)
-                self.get_api_method_args(class_api, class_api.methods[method_id][0])
+                pkg_api, class_api, method_id = self.choose_api(op)
+                args = get_api_method_args(pkg_api, class_api, class_api.methods[method_id][0])
             except self.InteractiveCmdException as e:
                 print(e)
+                continue
+            except Exception as e:
+                print(f"Ошибка: {e}")
+                continue
+
+            # вызов метода
+            try:
+                getattr(class_api.class_obj(), class_api.methods[method_id][0])(*args)
+            except Exception as e:
+                print(f"Произошла ошибка при выполнении метода {class_api.methods[method_id][0]}")
+                print(e)
+                continue

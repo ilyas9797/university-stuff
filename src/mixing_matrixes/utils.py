@@ -1,5 +1,6 @@
 """Вспомогательные функции для построения перемешивающих матриц."""
 import numpy as np
+import  os
 
 
 def change_column_order(matrix: np.ndarray) -> np.ndarray:
@@ -37,7 +38,8 @@ def make_pretty_matrix(matrix: np.ndarray) -> str:
     return result
 
 
-def write_matrix_pretty(file_path: str, matrix: np.ndarray) -> None:
+def write_matrix_pretty(filename: str, matrix: np.ndarray) -> None:
     """Запись матрицы matrix в файл file_name"""
-    with open(file_path, 'w') as file:
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    with open(filename, 'w') as file:
         file.write(make_pretty_matrix(matrix))

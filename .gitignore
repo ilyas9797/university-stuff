@@ -6,7 +6,10 @@
 
 *__pycache__
 
+.idea
+
 *old
 doc
 trash
 vendor
+experiments

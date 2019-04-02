@@ -13,8 +13,6 @@ def main():
     utils.index_functionality()
     console = utils.InteractiveCmd(utils.imported_API_by_pkg)
     console.interactive()
-    
-    
 
 
 if __name__ == '__main__':

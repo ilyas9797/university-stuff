@@ -7,6 +7,7 @@ from src.mixing_matrixes.utils import write_matrix_pretty
 
 
 class MixingMatrixesCmdAPI:
+
     def construct_matrix_MMLR_with_SPECK_api(self, r: int, n: int, pickup_points: List[int], filename: str) -> None:
         """Построение перемешивающей матрицы ММЛГ с модифицирующим преобразованием SPECK и запись ее в файл.
         Параметры:
