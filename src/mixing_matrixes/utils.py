@@ -23,7 +23,7 @@ def cast_matrix_to_identity_format(matrix: np.ndarray) -> np.ndarray:
     for i in range(shape[0]):
         for j in range(shape[1]):
             if matrix[i, j] > 0:
-                matrix[i, j] = 1
+                new_matrix[i, j] = 1
 
     return new_matrix
 

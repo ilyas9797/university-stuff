@@ -14,10 +14,11 @@ class APIClass:
 
 
 class ImportedPkgAPI:
-    pkgname: str
-    settings: dict
-    module_obj: ModuleType
-    classes: List[APIClass] = []
+    def __init__(self):
+        self.pkgname: str
+        self.settings: dict
+        self.module_obj: ModuleType
+        self.classes: List[APIClass] = []
 
 
 # API классы, предоставляемые пакетами
@@ -184,6 +185,11 @@ def cast_api_method_arg_str_to_type(arg_in: str, arg_type: Any) -> Possible_API_
 def get_api_method_args(pkg_api: ImportedPkgAPI, class_api: APIClass, method_name: str) -> List[Any]:
     """Считывает аргументы для вызова выбранного API-метода."""
     sig = signature(getattr(class_api.class_obj(), method_name))
+
+    # вывод подробностей параметров метода
+    print(f"{method_name} - Параметры: {sig}")
+    print(getattr(class_api.class_obj(), method_name).__doc__ + "\n")
+
     args = []
     for param_name in sig.parameters:
         param = cast(Parameter, sig.parameters[param_name])
@@ -196,6 +202,7 @@ def get_api_method_args(pkg_api: ImportedPkgAPI, class_api: APIClass, method_nam
         if param.name == 'filename':
             arg = f"{root_settings['experiments_root_dir']}/{pkg_api.settings['experiments_dir']}/{arg}"
         args.append(arg)
+    print()
     return args
 
 
@@ -240,12 +247,9 @@ class InteractiveCmd:
                 # по всем методам класса
                 for method in class_api.methods:
 
-                    # получение информации о параметрах метода
-                    sig = signature(method[1])
-                    prompt += f"[{i}] - {method[0]} - Параметры: {sig}\n"
-
                     # получение описания метода
-                    prompt += method[1].__doc__ + "\n\n"
+                    new_line = '\n'              
+                    prompt += f"[{i}] - {method[1].__doc__.split(new_line)[0]} \n\n"
                     i += 1
         if i < 1:
             raise Exception("Ошибка: API не обнаружено.")
@@ -260,8 +264,8 @@ class InteractiveCmd:
         method_id = op
         for pkg in self.API:
             for class_api in pkg.classes:
-                if (len(class_api.methods) - 1) > method_id:
-                    method_id -= len(class_api.methods) - 1
+                if len(class_api.methods) - 1 < method_id:
+                    method_id -= len(class_api.methods)
                 else:
                     return pkg, class_api, method_id
 
@@ -269,6 +273,7 @@ class InteractiveCmd:
         while True:
 
             # вывод подсказки
+            print("==========================================")
             print(self.prompt)
 
             # выбор операции
@@ -276,10 +281,10 @@ class InteractiveCmd:
                 op = input(f"Введите номер [0-{self.options - 1}]: ")
                 op = int(op)
             except ValueError:
-                print(f"Ошибка: выбрана некорректная опция.\nПопробуйте еще раз.")
+                print("Ошибка: выбрана некорректная опция.\nПопробуйте еще раз.\n")
                 continue
             except Exception as e:
-                print(f"Ошибка: {e}")
+                print(f"Ошибка: {e}.\n")
                 continue
             print()
 
@@ -291,13 +296,15 @@ class InteractiveCmd:
                 print(e)
                 continue
             except Exception as e:
-                print(f"Ошибка: {e}")
+                print(f"Ошибка: {e}.\n")
                 continue
 
             # вызов метода
             try:
                 getattr(class_api.class_obj(), class_api.methods[method_id][0])(*args)
+                print()
+                print("Операция успешно выполнена.\n")
             except Exception as e:
-                print(f"Произошла ошибка при выполнении метода {class_api.methods[method_id][0]}")
+                print(f"Произошла ошибка при выполнении метода {class_api.methods[method_id][0]}.\n")
                 print(e)
                 continue

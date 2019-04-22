@@ -1,0 +1,8 @@
+{
+    "pkg_name": "Свойство совершенности",
+    "pkg_description": "",
+    "API": [
+        "PerfectionCmdAPI"
+    ],
+    "experiments_dir": "perfection_properties"
+}
